@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- saved from url=(0197)https://checkout.pay.jp/iframe.html?key=pk_test_7f392408dd4ea8f5701e752e&lang=ja&submit_label=%E3%82%AB%E3%83%BC%E3%83%89%E3%81%A7%E6%94%AF%E6%89%95%E3%81%86&name_placeholder=TARO%20YAMADA&origin=* -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<link rel="stylesheet" href="./css/server.css" media="screen" charset="utf-8">
+<title></title>
+<style>
+#number-form{
+  width:200px;
+}
+
+
+#expiry-form{
+  width:100px;
+}
+
+#cvc-form{
+  width:100px;
+}
+
+</style>
+</head>
+<body>
+<div id="paycard" tabindex="-1" role="dialog" class="paycard_ui">
+	<div id="payjp_panel" role="document" class="modal-dialog active">
+		<div class="modal-content">
+			<div class="card_block">
+				<div class="inner">
+					<div class="card_block__header">
+						<div id="payjp_close" data-dismiss="modal" aria-label="Close" class="close"></div>
+						<div id="payjp_title" class="card_block__header__text">支払い情報</div>
+					</div>
+					<div class="card_block__body">
+						<div id="payjp_spinner" class="spinner" style="display: none;">
+							<img src="./image/loading.gif">
+						</div>
+						<div class="tab-content">
+							<div id="payjp_supportedBrands" class="mod--cardlist">
+								<ul>
+									<li><img src="./image/visa.png"></li>
+									<li><img src="./image/mastercard.png"></li>
+									<li><img src="./image/jcb.png"></li>
+									<li><img src="./image/americanExpress.png"></li>
+									<li><img src="./image/discover.png"></li>
+									<li><img src="./image/dinersClub.png"></li>
+								</ul>
+							</div>
+							<div id="account_card" role="tabpanel" class="tab-pane active">
+								<form>
+									<div class="mod--form">
+										<div class="form_control">
+											<div class="inner">
+												<label for="number-form">カード</label>
+												<!-- input
+													id="payjp_cardNumber" name="cardnumber"
+													class="payjp_simple-input-text" type="tel"
+													placeholder="1234 5678 9012 3456" maxlength="19"
+													pattern="([0-9]| )*" -->
+												<div id="number-form" class="payjs-outer"></div>
+												<hr class="payjp_border">
+												<hr class="payjp_hiddenborder">
+												<div id="payjp_cardImage" class="card" ></div>
+											</div>
+										</div>
+										<div class="form_control form_control--half">
+											<div class="inner">
+												<label for="expiry-form">有効期限</label>
+												<!-- input
+													id="payjp_cardExpiresMonth" name="ccmonth"
+													class="payjp_simple-input-text" autocomplete="off"
+													inputtype="number" placeholder="月" type="tel" maxlength="2" -->
+												<div id="expiry-form" class="payjs-outer"></div>
+												<input id="payjp_cardExpiresYear"
+													name="ccyear" class="payjp_simple-input-text"
+													autocomplete="off" inputtype="number" placeholder="年"
+													type="tel" maxlength="2">
+												<input
+													id="payjp_cardExpiresSeparator"
+													class="payjp_simple-input-separator" placeholder="/"
+													type="text" disabled="">
+												<hr class="payjp_border">
+												<hr class="payjp_hiddenborder">
+											</div>
+											<span id="payjp_partition-border"></span>
+											<div class="inner">
+												<label for="cvc-form">CVC番号</label> 
+												<!-- input
+													id="payjp_cardCvc" name="cvc"
+													class="payjp_simple-input-text" autocomplete="off"
+													type="tel" maxlength="4" placeholder="CVC" -->
+												<div id="cvc-form" class="payjs-outer"></div>
+												<hr class="payjp_border">
+												<hr class="payjp_hiddenborder">
+												<div id="payjp_cvcTip" class="help_tip"
+													style="display: none;">
+													<img src="./image/type_01.png">
+												</div>
+												<div id="payjp_cvcTipMobile" class="help_tip__mobile"
+													style="display: none;">
+													<img src="./image/type_01_m.png">
+												</div>
+												<button id="payjp_cvcTipButton" class="help_tip_button" type="button" tabindex="-1"></button>
+											</div>
+										</div>
+										<div class="form_control">
+											<div class="inner">
+												<label for="payjp_cardName">名前</label>
+												<input
+													id="payjp_cardName" name="ccname"
+													class="payjp_simple-input-text" type="text"
+													inputtype="email" placeholder="TARO YAMADA">
+												<hr class="payjp_border">
+												<hr class="payjp_hiddenborder">
+											</div>
+										</div>
+									</div>
+									<div class="bottom_block">
+										<input id="payjp_cardSubmit" onclick="onSubmit(event)" type="button" value="カードで支払う" class="btn">
+									</div>
+								</form>
+								<span id="tokenId"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="copy">
+		<img src="./image/p_logo.png">
+	</div>
+</div>
+<script src="https://js.pay.jp/v2/pay.js"></script>
+<script>
+
+  var payjp = Payjp('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+  var elements = payjp.elements()
+
+  var numberElement = elements.create('cardNumber')
+  var expiryElement = elements.create('cardExpiry')
+  var cvcElement = elements.create('cardCvc')
+  
+  
+  numberElement.mount('#number-form')
+  expiryElement.mount('#expiry-form')
+  cvcElement.mount('#cvc-form')
+
+  function onSubmit(event) {
+    payjp.createToken(numberElement).then(function(r) {
+      document.querySelector('#tokenId').innerText = r.error ? r.error.message : r.id
+    })
+  }
+</script>
+
+</body>
+</html>
